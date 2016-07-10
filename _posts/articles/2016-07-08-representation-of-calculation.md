@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 计算的表示
-excerpt: "计算不是计算机，计算也不是 1 + 2，它是一个更为本质的东西。本文基于 lambda 演算，用另一种方式表示计算，从另一个角度理解计算"
+excerpt: "计算不是计算机，计算也不是 1 + 2，它是一个更为本质的东西。通过用 lambda 演算来描述计算可以从另一个角度对其进行理解。"
 modified: 2016-07-08
 categories: articles
 author: ktn
