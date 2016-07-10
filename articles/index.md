@@ -3,6 +3,10 @@ layout: page
 title: Article Archive
 excerpt: "An archive of articles sorted by date"
 search_omit: true
+image:
+  feature: article-bg.jpeg
+  credit: Leeroy
+  creditlink: http://www.lifeofpix.com/photographer/leeroy/
 ---
 
 <ul class="post-list">
