@@ -39,8 +39,10 @@
   .excerpt {
     display: block;
     float: none;
-    padding: 8px 0 0 0;
-    @include font-size(14, no, 16);
+    // add to make sparse
+    padding: 10px 0 0 0;
+    // @include font-size(14, no, 16);
+    @include font-size(14, no, 21);
     @include media($medium) {
       width: 70%;
     }
