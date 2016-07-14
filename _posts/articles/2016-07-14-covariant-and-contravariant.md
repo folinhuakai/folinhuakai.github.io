@@ -9,6 +9,8 @@ modified: 2016-07-14
 tags:
   - Object-oriented Programming
   - Type System
+  - Scala
+  - Java
 comments: true
 share: true
 ---
