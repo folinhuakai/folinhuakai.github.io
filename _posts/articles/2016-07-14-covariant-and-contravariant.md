@@ -153,7 +153,7 @@ Student student = students.get(0);
 | Scala | Java | 解释 |
 |:--------|:--------|:--------|
 | +T   | ? extends T | 协变（即：X[T<sub>sub</sub>] 是 X[T] 的一个子类） |
-| -T   | ? super T   | 逆变（即：Y[<sup>sup</sup>] 是 Y[T] 的一个子类） |
+| -T   | ? super T   | 逆变（即：Y[T<sup>sup</sup>] 是 Y[T] 的一个子类） |
 | T    | T           | 不变（即：无法用 Z[T<sub>sub</sub>] 或 Z[T<sup>sup</sup>] 替代 Z[T]） |
 {: .table}
 
