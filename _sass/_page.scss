@@ -295,6 +295,7 @@ span + .entry-title {
 		padding: (0px + $doc-line-height) / 2;
 		padding: (0rem + ($doc-line-height / $doc-font-size)) / 2;
 		font-family: $base-font;
+    @include font-size($doc-font-size + 2);
 		// font-family: $alt-font;
 		font-weight: bold;
 		text-align: left;
