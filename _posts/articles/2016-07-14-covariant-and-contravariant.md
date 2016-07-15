@@ -5,7 +5,7 @@ excerpt: "类型系统中的协变、逆变、不变分别是什么概念，以�
 categories: articles
 author: ktn
 date: 2016-07-14
-modified: 2016-07-14
+modified: 2016-07-15
 tags:
   - Object-oriented Programming
   - Type System
@@ -17,7 +17,7 @@ share: true
 
 ## 型变
 
-型变（variance）是类型系统里的概念，包括协变（covariance）、逆变（contravariance）和不变（invariance）。这个术语的目的是描述泛型情况下类型参数的父子类关系如何影响参数化类型的父子类关系。也就是说，假设有一个接收一个类型参数的参数化类型 `T` 和两个类 `A`，`B`，且 `B` 是 `A` 的子类，那么 `T[A]` 与 `T[B]` 的关系是什么？如果 `T[B]` 是 `T[A]` 的子类，那么这种型变就是**协变**，因为参数化类型 `T` 的父子类关系与其类型参数的父子类关系是**同一个方向的**。如果 `T[A]` 是 `T[B]` 的子类，则这种关系是**逆变**，因为参数化类型 `T` 的父子类关系与类型参数的父子类关系是**相反方向的**。类似地，如果 `T[A]` 和 `T[B]` 之间不存在父子类关系，那么这种型变就是**不变**。[^variance]
+型变（variance）是类型系统里的概念，包括协变（covariance）、逆变（contravariance）和不变（invariance）。这组术语的目的是描述泛型情况下类型参数的父子类关系如何影响参数化类型的父子类关系。也就是说，假设有一个接收一个类型参数的参数化类型 `T` 和两个类 `A`，`B`，且 `B` 是 `A` 的子类，那么 `T[A]` 与 `T[B]` 的关系是什么？如果 `T[B]` 是 `T[A]` 的子类，那么这种型变就是**协变**，因为参数化类型 `T` 的父子类关系与其类型参数的父子类关系是**同一个方向的**。如果 `T[A]` 是 `T[B]` 的子类，则这种关系是**逆变**，因为参数化类型 `T` 的父子类关系与类型参数的父子类关系是**相反方向的**。类似地，如果 `T[A]` 和 `T[B]` 之间不存在父子类关系，那么这种型变就是**不变**。[^variance]
 
 [^variance]: [Covariance and contravariance (computer science) - From Wikipedia, the free encyclopedia]("https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)")
 
@@ -34,7 +34,7 @@ Student[] students = { new Student() }
 students[0].study();
 Person[] persons = students;
 persons[0] = new Teacher();
-students[0].study();                   // Oops!
+students[0].study();  // Oops!
 ```
 
 这段代码显然错了，看一下刚刚做了什么。我们在 `Student` 数组里存放了一个 `Student` 实例，紧接着调用了这个对象的 `study` 方法，这个显然没错；然后将这个数组赋值给一个 `Person` 数组，由于数组是协变的，所以这步没问题；然后，向 `Person` 数组里添加一个 `Teacher` 的实例，这步也没问题，因为一个 `Teacher` 是一个 `Person`；接下来是获取 `Student` 数组里的对象，调用 `Student` 类的 `study` 方法，这似乎也是合理的。那问题在哪呢？
