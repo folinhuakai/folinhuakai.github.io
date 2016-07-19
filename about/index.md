@@ -2,7 +2,7 @@
 layout: page
 title: About the Blog
 excerpt: "Something about KTN Blog"
-modified: 2016-07-09
+modified: 2016-07-19
 image:
   feature: about-bg.jpeg
   credit: Nick Stanley
@@ -11,4 +11,4 @@ image:
 
 <p align = "center">Learning, Thinking, Coding & Writing.</p>
 <p align = "center">Here is KTN Blog.</p>
-<p align = "center">I'm here.</p>
+<p align = "center">(=￣ω￣=)</p>
