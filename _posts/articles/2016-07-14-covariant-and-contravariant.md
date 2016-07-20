@@ -5,7 +5,7 @@ excerpt: "类型系统中的协变、逆变、不变分别是什么概念，以�
 categories: articles
 author: ktn
 date: 2016-07-14
-modified: 2016-07-15
+modified: 2016-07-20
 tags:
   - Object-oriented Programming
   - Type System
@@ -19,7 +19,7 @@ share: true
 
 型变（variance）是类型系统里的概念，包括协变（covariance）、逆变（contravariance）和不变（invariance）。这组术语的目的是描述泛型情况下类型参数的父子类关系如何影响参数化类型的父子类关系。也就是说，假设有一个接收一个类型参数的参数化类型 `T` 和两个类 `A`，`B`，且 `B` 是 `A` 的子类，那么 `T[A]` 与 `T[B]` 的关系是什么？如果 `T[B]` 是 `T[A]` 的子类，那么这种型变就是**协变**，因为参数化类型 `T` 的父子类关系与其类型参数的父子类关系是**同一个方向的**。如果 `T[A]` 是 `T[B]` 的子类，则这种关系是**逆变**，因为参数化类型 `T` 的父子类关系与类型参数的父子类关系是**相反方向的**。类似地，如果 `T[A]` 和 `T[B]` 之间不存在父子类关系，那么这种型变就是**不变**。[^variance]
 
-[^variance]: [Covariance and contravariance (computer science) - From Wikipedia, the free encyclopedia]("https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science)")
+[^variance]: [Covariance and contravariance (computer science) - From Wikipedia, the free encyclopedia](https://en.wikipedia.org/wiki/Covariance_and_contravariance_(computer_science))
 
 ## 协变
 
@@ -39,9 +39,9 @@ students[0].study();  // Oops!
 
 这段代码显然错了，看一下刚刚做了什么。我们在 `Student` 数组里存放了一个 `Student` 实例，紧接着调用了这个对象的 `study` 方法，这个显然没错；然后将这个数组赋值给一个 `Person` 数组，由于数组是协变的，所以这步没问题；然后，向 `Person` 数组里添加一个 `Teacher` 的实例，这步也没问题，因为一个 `Teacher` 是一个 `Person`；接下来是获取 `Student` 数组里的对象，调用 `Student` 类的 `study` 方法，这似乎也是合理的。那问题在哪呢？
 
-事实上，这段代码可以编译通过，Java 并不会因此报编译错误，而是在运行 `persons[0] = new Teacher();` 时抛出一个 `java.lang.ArrayStoreException`。也就是说，给协变的数组的单元赋值的时候出错了。Java 将对这一错误的防止延后到了运行时期，错过了编译期的检查。编译器没有做正确的事情，这显然是一个设计错误，但这个错误是有其历史原因的[^origin_scala]。
+事实上，这段代码可以编译通过，Java 并不会因此报编译错误，而是在运行 `persons[0] = new Teacher();` 时抛出一个 `java.lang.ArrayStoreException`。也就是说，给协变的数组的单元赋值的时候出错了。这个错误本来应该由编译器发现并指出，但 Java 将对这一错误的防止延后到了运行时期，错过了编译期的检查。编译器没有做正确的事情，这显然是一个设计错误，但这个错误是有其历史原因的[^origin_scala]。
 
-[^origin_scala]: [The Origins of Scala]("https://www.artima.com/scalazine/articles/origins_of_scala.html")
+[^origin_scala]: [The Origins of Scala](https://www.artima.com/scalazine/articles/origins_of_scala.html)
 
 在 Java 的早期版本中，工程师们因为时间紧迫而选择暂时不添加泛型在 Java 的语法中，这导致 Java 的数组没法使用泛型，在这种情况下，如果数组的型变是不变，那么要写一些通用的数组操作方法就变得困难，解决方案就是将数组设计为协变的，这样，就可以用操作 `Object[]` 的方法来操作所有引用类型的数组了。比如你可以写类似这样的方法来对数组里的对象进行排序：
 
@@ -79,7 +79,7 @@ val students: List[Student] = List(new Student)
 val persons: List[Person] = students
 ```
 
-在 Java 中，如下的代码也是错误的：
+类似于 Scala 的不变语义，在 Java 中，如下的代码也是错误的：
 
 ```java
 List<Student> students = new ArrayList<>();
@@ -107,7 +107,7 @@ Person person =  persons.get(0);
 persons.set(0, new Teacher());
 ```
 
-这段代码无法编译通过，`List<? extends Person> persons` 是 Java 的协变声明，它大概表达了这样的语义： `List` 的类型参数是 `Person` 的**某个**子类，而具体是什么类型并不知道，既然不知道是什么类型，也就自然无法将其中的元素替换为其他值了，这就保证了协变集合的要求。也就是说，Java 选择不在参数化类型声明的时候去声明该类型的型变关系，而是选择在这个类型被使用的时候去进行限定。从语义上也可以看出，这个方式掩盖了协变本身的概念，是一个较为工程化的思路。但是，型变应该是一个类型本身的特性，Scala 的处理方式能在类型声明上更加清晰地表意，个人更偏向于 Scala 的处理方式。
+这段代码无法编译通过，`List<? extends Person> persons` 是 Java 的协变声明，它大概表达了这样的语义： `List` 的类型参数是 `Person` 的**某个**子类，而具体是什么类型并不知道，既然不知道是什么类型，也就自然无法将其中的元素替换为其他值了。但由于已经知道了其元素类型是 `Person` 的**某个**子类，所以可以将其元素当作 `Person` 类型的对象取出。这就保证了协变集合的要求。也就是说，Java 选择不在参数化类型声明的时候去声明该类型的型变关系，而是选择在这个类型被使用的时候去进行限定。从语义上也可以看出，这个方式掩盖了协变本身的概念，是一个较为工程化的思路。但是，型变应该是一个类型本身的特性，Scala 的处理方式能在类型声明上更加清晰地表意，个人更偏向于 Scala 的处理方式。
 
 ## 逆变
 
@@ -167,7 +167,16 @@ Student student = students.get(0);
 
 为什么可以写 `val person: Person = new Student` 呢？因为每个对象都可以看作是一个只带有一个方法的对象，相当于 `value.get()`。而 `get` 方法的类型是 `() => T`。所以我们可以写这样的代码，它是协变的。这么说感觉有点怪，但是，在 Scala 的语法糖加持下，这么说其实挺自然的，因为 Scala 允许在函数不需要参数的情况下省略括号，且如果调用的方法是 `apply` 的话，不需要写 `value.apply()` 直接写成 `value()` 即可。也就是 `def t() = new T` 和 `val t = new T` 相比，虽然前者每次都会创建一个新的实例，但是在使用者看来，都可以写为 `t`，并不会有区别。
 
-在 Scala 中，如果进行了协变或者逆变的标记，编译器就会对这个类型参数的使用进行检查，如果它出现在了错误的位置上，编译器就会提示错误，防止了开发者因此而犯错。
+在 Scala 中，如果进行了协变或者逆变的标记，编译器就会对这个类型参数的使用进行检查，如果它出现在了错误的位置上，编译器就会提示错误，防止了开发者因此而犯错。例如：
+
+```scala
+trait Test[+T] {
+  def get(): T
+  // Compiler error:
+  // Covariant type T occurs in contravariant position in type T of value v
+  def set(v: T): Unit
+}
+```
 
 类型声明是文档，更精确的类型声明就是更清晰的文档，Scala 的设计在这方面可以说是更胜一筹。
 
