@@ -81,21 +81,21 @@ val l = if (b != null) b.length else -1
 [^type-script-ref]: [TypeScript Handbook - Advanced Types](http://www.typescriptlang.org/docs/handbook/advanced-types.html)
 [^type-script-2]: [Non-nullable types #7140](https://github.com/Microsoft/TypeScript/pull/7140)
 
-Kotlin 对可空类型还提供了其他的处理方式，例如安全的链式调用：
-
-```kotlin
-bob?.department?.head?.name
-```
-
-如果其中任意一步返回了 `null` 则整个表达式的结果将是 `null`。
-
 Kotlin 还提供一个能将可空类型安全转为一般类型的方式，使用 `?:` 操作符：
 
 ```kotlin
 val l = b?.length ?: -1
 ```
 
-这段代码和之前的 `val l = if (b != null) b.length else -1` 是等效的，使用这个操作符就可以在不对控制流进行分析的情况下，将可空类型的对象转为一般类型的对象。感觉这个处理方式要更优一些。
+这段代码和上一段代码是等效的，使用这个操作符就可以在不对控制流进行分析的情况下，将可空类型的对象转为一般类型的对象。从概念上来看，感觉这个处理方式要更优一些。
+
+Kotlin 对可空类型还提供了其他的处理方式，例如安全的链式调用：
+
+```kotlin
+bob?.department?.head?.name
+```
+
+如果其中任意一步返回了 `null` 则整个表达式的结果将是 `null`。这样写起来相当直观也很方便，不用担心中途对一个 `null` 进行方法调用而抛出异常，也不需要写太多的代码来进行类型的收窄或者类型的转换。
 
 ## 利用参数化类型表示
 
