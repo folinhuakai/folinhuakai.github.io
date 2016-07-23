@@ -41,7 +41,7 @@ Null 值由来已久，它最早是由 Tony Hoare 图方便而创造的，后来
 
 [^stroustrup]: [Bjarne Stroustrup's C++ Style and Technique FAQ](http://www.stroustrup.com/bs_faq2.html#null)
 
-相对于 C++ 的处理，由于 Java 中没有指针类型的存在，Java 选择将 `null` 表示为一个特殊的东西。在 Java 中，`null` 是一个关键字，用来表示一个引用类型的对象没有被初始化，或是没有引用任何对象的状态，这也是类似于 C 的做法。这个关键字很特殊，因为 `null` 本身没有任何运行时类型，但是却能转换为任意的引用类型[^jvm-ref]。但你一旦对一个 `null` 调用任何方法，或者进行拆箱，就会导致一个 `NullPointerException` 的抛出。Java 虚拟机规范甚至不确保它会以一个值的形式存在[^jvm-ref]。所以你可以将 `null` 赋值给任意引用类型的对象，但是当调用 `instanceof` 的时候，Java 又会告诉你 `null` 不是该类型的实例，这个处理事实上非常之奇怪。
+相对于 C++ 的处理，由于 Java 中没有指针类型的存在，而且 Java 是一个静态强类型语言，Java 选择将 `null` 表示为一个特殊的东西。在 Java 中，`null` 是一个关键字，用来表示一个引用类型的对象没有被初始化，或是没有引用任何对象的状态，这也是类似于 C 的做法。这个关键字很特殊，因为 `null` 本身没有任何运行时类型，但是却能转换为任意的引用类型[^jvm-ref]。但你一旦对一个 `null` 调用任何方法，或者进行拆箱，就会导致一个 `NullPointerException` 的抛出。Java 虚拟机规范甚至不确保它会以一个值的形式存在[^jvm-ref]。所以你可以将 `null` 赋值给任意引用类型的对象，但是当调用 `instanceof` 的时候，Java 又会告诉你 `null` 不是该类型的实例，这个处理事实上非常之奇怪。
 
 [^jvm-ref]: [Java Virtual Machine Specification - Chapter 2. The Structure of the Java Virtual Machine](http://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html#jvms-2.4)
 
