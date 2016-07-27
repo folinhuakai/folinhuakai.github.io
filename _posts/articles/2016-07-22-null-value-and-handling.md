@@ -1,7 +1,7 @@
 ---
 layout: post
-title: null 值及其处理方式
-excerpt: "null 值的由来及几种不安全或安全的处理方式的对比。"
+title: Null 值及其处理方式
+excerpt: "讨论 null 值的由来及几种典型的表示方式和处理方式。"
 categories: articles
 author: ktn
 date: 2016-07-22
