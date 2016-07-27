@@ -15,7 +15,7 @@ comments: true
 share: true
 ---
 
-## null 值的由来
+## Null 值的由来
 
 Null 值由来已久，它最早是由 Tony Hoare 图方便而创造的，后来被证明这是个错误，而他本人也对此进行了道歉，并称之为**十亿美金错误**[^tony-hoare]。
 
