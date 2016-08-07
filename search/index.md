@@ -6,10 +6,6 @@ modified:
 excerpt:
 search_omit: true
 sitemap: false
-image:
-  feature: search-bg.jpeg
-  credit: Alexis Doyen
-  creditlink: http://www.lifeofpix.com/photographer/alexis-doyen/
 ---
 
 <!-- Search form -->
