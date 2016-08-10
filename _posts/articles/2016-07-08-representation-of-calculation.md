@@ -5,7 +5,7 @@ excerpt: "计算不是计算机，计算也不是 1 + 2，它是一个更为本�
 date: 2016-07-08
 modified: 2016-07-27
 categories: articles
-author: ktn
+author: flhk
 tags:
   - Funcation Programming
   - Theory
