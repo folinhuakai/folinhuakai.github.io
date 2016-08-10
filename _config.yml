@@ -1,11 +1,42 @@
 # Site wide configuration
 
-title: KTN Blog
+# 重要！
+# 除了这个文件之外，需要改的文件在 _data 目录下
+# authors 文件用于放置作者信息，每篇文章的头信息里会有类似
+#                               author: xxx
+#   这样的信息，这个 xxx 就记录在 authors 文件中
+# navigation 文件记录网站顶部导航栏的信息
+#   每一个导航选项都对应一个目录下的 index 文件
+
+# 网站的浏览器标签页上的那个图标的修改就是替换根目录下的 favicon.ico 和 favicon.png
+# 网站的 about 页面要自己修改 about/index.html
+# 写文章的时候，要放在 articles 文件夹下，命名为：年-月-日-英文标题.md
+# 注意每篇文章开头的信息
+#
+#   ---
+#   layout: post            <-- 这个是使用的模板文件
+#   title: xxxxxxxxxx       <-- 这个是标题
+#   excerpt: "。。。"       <-- 这个是文章摘要，注意英文双引号包裹
+#   date: 2016-07-08        <-- 这个是文章创建时间，和文件名里那个相同
+#   modified: 2016-07-27    <-- 这个是最后一次修改时间，这个信息和创建时间都会显示在文章左侧
+#   categories: articles    <-- 文章所属集，就是所在的 _post 目录下的子目录名称
+#   author: ktn             <-- 文章作者名，就是在 authors 文件里配置的那个，应该改为 flhk
+#   tags:                   <-- 标签
+#     - AAA
+#   comments: true          <-- 是否允许评论，即便设置了 true 也必须要有 disqus 账号并在 _config 文件中进行配置
+#   share: true             <-- 是否显示分享链接，由于我把 _includes/social-share.html 里的东西都注释了，所以设置了也没用，如果想要，可以取消那个文件里的注释
+#   ---
+#
+# 具体的写法可以参考
+# https://github.com/li-zhirui/li-zhirui.github.io/tree/master/_posts/articles
+# 里面的前三篇文章
+
+title: 佛玲花开 # 这是网站的名字
 locale: zh_CN
-description: A code monkey who can't type out Shakespeare
-logo: site-logo.jpeg
+description: 这里是 logo 下的文字，自行替换
+logo: site-logo.jpeg # 这个是网站的 logo 放在 images 文件夹下，自行替换
 search: true
-url: https://li-zhirui.github.io
+url: https://folinhuakai.github.io # 这是网站地址，如果要本地调试就把这行注释掉，再把下面那行取消注释
 # url: http://127.0.0.1:4000
 
 # Jekyll configuration
@@ -37,13 +68,13 @@ exclude: ["lib", "config.rb", "Capfile", "config", "log", "Rakefile", "Rakefile.
 
 # Site owner
 owner:
-  name: Kurisu.Ti.Na.
-  avatar: bio-photo.jpg
-  email: labman004@outlook.com
-  disqus-shortname: li-zhirui
+  name: folinhuakai  # 这个在网站下面的版权声明里会有显示
+  avatar: bio-photo.jpg # 这个是所有者头像文件，放在 images 目录下，但重要的是 authors 文件里的那个信息
+  email: # 这里是 email 地址
+  disqus-shortname: # 这里是 disqus 评论插件的信息，如果没有的话就无法显示评论
   twitter: #username
   facebook: #username
-  github: li-zhirui
+  github: folinhuakai
   stackexchange: #http://stackoverflow.com/users/123456/username
   linkedin: #username
   instagram: #username
@@ -53,7 +84,7 @@ owner:
   weibo: #userid
   google:
     plus: #username
-    analytics: UA-80302213-1
+    analytics: 
     verify:
     ad-client:
     ad-slot:
