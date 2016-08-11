@@ -1,38 +1,33 @@
 ---
 layout: post
-title: 计算的表示
-excerpt: "计算不是计算机，计算也不是 1 + 2，它是一个更为本质的东西。通过用 lambda 演算来描述计算可以从另一个角度对其进行理解。"
-date: 2016-07-08
-modified: 2016-07-27
+title: 第七章 类 （C++ Primer 5th ）
+excerpt: "C++ Primer 5th学习笔记（含课后练习答案）。"
+date: 2016-08-11
+modified:
 categories: articles
 author: flhk
 tags:
-  - Funcation Programming
-  - Theory
-  - Lisp
+  - C++
+  - 类
 comments: true
 share: true
 ---
-
-## 伪哲学家
-
-当提到**计算**这个词的时候，我们会想到什么，是想到**计算机**，或是**图灵机**，又或是操控计算机的**汇编语言**，还是说 **1 + 1** 这样的算式？这些都是计算，但它们都是计算的一种表示而非计算本身，计算本身是一个更加本质的东西，可以认为是一种柏拉图型相，或是理念，刚刚说到的东西都是对它的摹仿。
-
-比如我们说到 **4** 的时候，我们在用 **4** 这个符号去摹仿 **4** 这个理念，这个理念可以用 **4** 来摹仿，也可以用**四**，也可以用 **four**，具体是什么不重要，重要的是你不会走在路上突然见到一个 **4**，而是会见到一个类似 **4** 的东西。那既然可以用这样一个来自阿拉伯的符号来摹仿数字，那是否有其他的方式来摹仿呢？更一般地说，是否有其他的计算表示方式，并以此来实现我们在汇编语言，C，Java，等语言中表示的计算呢？下面将介绍一个图灵完备的计算模型，称为 λ 演算（lambda calculus）[^lambda-paper]，该计算的表示由 Alonzo Church 在 20 世纪 30 年代发明，它可被称为是最小的通用程序设计语言。
+从最基本的层面理解，数据结构是一组相关的数据元素组织起来然后使用它们的策略和方法，在C++语言中允许用户以类的形式自定义数据类型。类的基本思想是**数据抽象**和**封装**，数据抽象的实现依赖于接口和实现分离的编程技术（如封装），接口包括用户所能执行的操作，类的实现包括类的数据成员、私有函数及接口函数。
 
 [^lambda-paper]: Raul Rojas - A Tutorial Introduction to the Lambda Calculus
 
-## λ 演算
+## 7.1 定义抽象数据类型
 
-λ 演算非常简练，而且相对于图灵机的计算模型来说非常优雅，其核心在于表达式（expression）。一个名字（name）又被称为变量（variable），是一个标识符（identifier），可以是任意的字母，如：a, b, c 等。而表达式的定义如下：
-
-$$
-\begin{array}{rcl}
-\text{<expression>} & := & \text{<name> | <function> | <application>} \\
-\text{<function>} & := & \lambda~\text{<name>.<expression>} \\
-\text{<application>} & := & \text{<expression><expression>} \\
-\end{array}
-$$
+抽象数据类型：
+ 1.首先，类的用户不能直接访问题的数据成员（即封装）。
+ 2.其次，定义一些操作供类用户使用。
+下面定义了一个Sales_data数据类型：
+```c++
+struct Sales_data{
+  std::string bookNo;
+  std::string isbn() const{return bookNo;}
+};
+```
 
 至于变换规则则总共有三条，更加具体的描述可参考维基百科[^lambda-wiki]：
 
