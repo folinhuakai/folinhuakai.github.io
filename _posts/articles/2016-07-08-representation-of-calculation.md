@@ -22,7 +22,7 @@ share: true
  1.首先，类的用户不能直接访问题的数据成员（即封装）。
  2.其次，定义一些操作供类用户使用。
 下面定义了一个Sales_data数据类型：
-```c++
+```C++
 struct Sales_data{
   std::string bookNo;
   std::string isbn() const{return bookNo;}
