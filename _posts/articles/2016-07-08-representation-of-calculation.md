@@ -18,87 +18,59 @@ share: true
 
 抽象数据类型：
  1.首先，类的用户不能直接访问类的数据成员（即封装）。
+
  2.其次，定义一些操作供类用户使用。
-下面定义了一个Sales_data数据类型：
-
-```c++
-struct Sales_data{
-  std::string bookNo;
-  std::string isbn() const{return bookNo;}
-};
-```
-
-```cpp
-struct Sales_data{
-  std::string bookNo;
-  std::string isbn() const{return bookNo;}
-};
-```
-
-练习7.1 
-
-sales_data.h文件：
-
-sales_data.h文件：
 
 
-sales_data.h文件：
+### 练习7.1 
 
+sales_data.h：
 
-
-
-
-
-
-
-
-
-
-
-sales_data.h文件：
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-sales_data.h文件：
-
-<h2>aaa</h2>
 
 ```c++
 #include<iostream>
 #include<string>
 using namespace std;
 class Sales_data{
-    public:
+public:
   string bookNo;
   unsigned units_sold=0;
   double revenue=0.0;
 };
 ```
+7.1.cpp:
 
-```
+```c++
 #include<iostream>
 #include<string>
 #include "sales_data.h"
 using namespace std;
 int main(){
-    Sales_data total;
-    if(cin>>total.bookNo>>total.units_sold>>total.revenue){
-  Sales_data trans;
-  while(cin>>trans.bookNo>>trans.units_sold>>trans.revenue){
+  Sales_data total;
+  if(cin>>total.bookNo>>total.units_sold>>total.revenue){
+    Sales_data trans;
+    while(cin>>trans.bookNo>>trans.units_sold>>trans.revenue){
       if(total.bookNo == trans.bookNo){
-    total.units_sold += trans.units_sold;
-    total.revenue += trans.revenue;
+        total.units_sold += trans.units_sold;
+        total.revenue += trans.revenue;
       }
       else{
-    cout<<total.bookNo<<" "<<total.units_sold<<" "<<total.revenue<<endl;
-    total=trans;
+        cout<<total.bookNo<<" "<<total.units_sold<<" "<<total.revenue<<endl;
+        total=trans;
       }
-  } 
-  cout<<total.bookNo<<total.units_sold<<total.revenue<<endl;
-    }
-    else{
-  cout<<"input data!"<<endl;
-    }    
+    } 
+    cout<<total.bookNo<<total.units_sold<<total.revenue<<endl;
+  }
+  else{
+    cout<<"input data!"<<endl;
+  }    
 }
 ```
 
-注释：
+注意：
+
+1.类以struct或class关键字开始，这两个关键字唯一的区别是默认的访问权限不太一样，紧跟着类名和类体（类体可以为空）。<bt\>
+2.类体右侧表示结束的花括号后面必须写一个分号，分号表明声明符的结束。<bt\>
+3.`total=trans`使用了默认构造函数，即对对象的每个成员进行赋值。<bt\>
+
 
