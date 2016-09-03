@@ -34,7 +34,7 @@
 title: 佛玲花开 # 这是网站的名字
 locale: zh_CN
 description: 爱吃的灵魂终究会相遇...
-logo: site-logo.jpeg # 这个是网站的 logo 放在 images 文件夹下，自行替换
+logo: site-logo.jpg # 这个是网站的 logo 放在 images 文件夹下，自行替换
 search: true
 url: https://folinhuakai.github.io # 这是网站地址，如果要本地调试就把这行注释掉，再把下面那行取消注释
 # url: http://127.0.0.1:4000
