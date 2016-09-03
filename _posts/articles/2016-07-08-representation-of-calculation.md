@@ -719,3 +719,225 @@ private:
 三、可能在开发过程中给do_display函数添加一些调试信息，而这些信息代码最终是要去掉的，显然只删除一处会方便得多。
 
 四、我们在类内定义了do_display函数，这个额外的函数调用不会增加任何开销。
+
+#### 练习 7.28-29
+
+答：如果返回的是Screen而非Screen &，对返回值进行拷贝相当于如下代码
+
+```c++
+Screen temp=myScreen.move(4,0);//对返回值进行拷贝
+temp.set('#');//不会改变myScreen的contents
+```
+
+运行结果：
+
+```c++
+//with '&'
+XXXXXXXXXXXXXXXXXXXX#XXXX
+XXXXXXXXXXXXXXXXXXXX#XXXX
+
+// without '&'
+XXXXXXXXXXXXXXXXXXXX#XXXX
+XXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+#### 练习7.30
+
+答：优点是使程序更加明确减少误读范围，可以使得成员函数的形参与数据成员同名。缺点是重复、多余。
+
+
+#### 练习7.31
+
+```c++
+class Y;
+class X {
+  Y *y;
+};
+
+class Y {
+  X x;
+};
+```
+
+注意：
+
+1.对于一个类来说，我们在创建它的对象前该类必须被定义而不能仅仅被声明。否则，编译器无法确定这样的对象需要多少存储空间。
+
+2.类类型在它声明之后定义之前是一个不完全类型，不完全类型只能在有限的情况下使用：可以定义指向这种类型的指针或引用，也可以声明以不完全类型为参数或返回类型的函数。
+
+#### 练习7.31
+
+```c++
+class Window_mgr {
+public:
+  using screenIndex = vector<Screen>::size_type;
+  void clear(screenIndex);
+  Window_mgr(Screen & scr);
+  Window_mgr & add(Screen &scr);
+private:
+  vector<Screen> screens;
+};
+Window_mgr & Window_mgr::add(Screen &scr) {
+  screens.push_back(scr);
+  return *this;
+}
+Window_mgr::Window_mgr(Screen & scr) {
+  screens.push_back(scr);
+}
+
+class Screen {
+public:
+  friend void Window_mgr::clear(screenIndex);
+  friend ostream& print(ostream &os, Screen &item);
+  typedef string::size_type pos;
+  Screen() = default;
+  Screen(pos h, pos w) :height(h), width(w), contents(h*w, ' ') {}
+  Screen(pos h, pos w, char c) :height(h), width(w), contents(h*w, c) {}
+  Screen(istream &is);
+  char  get()const {return contents[cursor];}
+  Screen  move(pos row, pos col) { cursor = row*width + col; return *this; }
+  Screen  set(char c) { contents[cursor] = c; return *this; }
+  Screen & set(pos row, pos col, char c) { contents[row*width + col] = c; return *this; }
+  Screen  display(ostream & os) { do_display(os); return *this; }
+  const Screen & display(ostream & os)const { do_display(os); return *this; }
+  
+private:
+  void do_display(ostream & os)const {
+    os << contents;
+  }
+  pos cursor=0;
+  pos height = 0, width = 0;
+  string contents;
+};
+
+void Window_mgr::clear(screenIndex i) {
+  Screen &s = screens[i];
+  s.contents = string(s.height*s.width, ' ');
+}
+```
+
+注意：
+
+1.先定义Window_mgr类，其中声明clear函数但不能定义它。在使用Screen的成员前先声明Screen，此时不能定义clear函数是因为其还不是Screen的友元。
+
+2.在此题中需要特别注意类、函数的声明和定义的顺序。
+
+#### 练习7.33
+
+```c++
+Screen::pos Screen::size()const {
+  return height*width;
+}
+```
+
+注意：（作用域问题）
+
+1.每个类都会有自己的作用域。在类的作用域之外，普通数据和函数成员只能有对象、引用或指针使用成员访问符来访问。对于类的类型成员，如本题中的`pos`则使用作用域运算符访问。
+
+2.在类的外部成员名是被隐藏起来的，在类外定义成员函数时必须提供类名和成员函数名，一旦遇到了类名定义剩余的部分就在类的作用域之内了。
+
+3.本题出现错误的原因是返回类型名在类名出现之前，事实上它是位于Screen类的作用域之外的。想要用pos作为返回类型就必须指定哪个类定义了它。
+
+#### 练习7.34 
+
+答：出现未定义标识符pos错误，编译不能通过。类的两阶段处理方式只适用于成员函数中使用的名字，声明中使用的名字，包括返回类型或者参数列表中使用的名字，都必须在使用前确保可见。
+
+#### 练习7.35
+
+答：在`Exercise`类的开始处定义了类型`double`的别名`Type`,所以在类的作用域中使用到的`Type`类型都是`double`而不是类外定义的`string`类型。但有个问题是在类外定义成员函数时，返回类型出现在类名之前并不在类的作用域内，所以会与全局作用域中的`string`类型匹配，因此出现了`setVal`成员函数与声明不匹配的错误。正确代码如下：
+```c++
+typedef string Type;
+Type initVal();
+class Exercise{
+public:
+  typedef double Type;
+  Type setVal(Type);
+  Type initVal();
+private:
+  int val;
+};
+
+Exercise::Type Exercise::setVal(Type parm){
+  val =parm +initVal();
+  return val;
+}
+```
+
+#### 练习7.36
+
+答：正确代码如下：
+
+```c++
+struct X{
+  X(int i,int j):rem(i%j),base(i){}
+  int rem,base;
+}
+```
+
+注意：
+
+1.成员初始化的顺序与它在类定义中出现的顺序一致，本题中先初始化了`rem`然后再初始化`base`。
+
+2.最好令构造函数初始化顺序与成员声明顺序保持一致。而且，如果可能的话尽量避免使用某些成员初始化其它成员。
+
+3.当我们定义变量时习惯于立即对其进行初始化，而不是先定义再赋值。就对象的数据成员而言，初始化和赋值也有类似的区别。如果在构造函数的初始值列表中没有显示地初始化成员，则该成员将在构造函数体之前执行默认初始化。构造函数的初始值有时是必不可少的，如成员是引用、const或没有默认构造函数的类类型。
+
+4.在很少多类中，初始化和赋值的区别事关底层的效率问题：前者直接初始化数据成员，后者先初始化后赋值。建议使用构造函数初始值。
+
+#### 练习7.37
+
+```c++
+class Sales_data {
+public:
+  Sales_data(string s="") :bookNo(""){}; -->1
+  Sales_data(const string &s, unsigned n, double p) :bookNo(s), units_sold(n), revenue(p*n) {}  -->2
+  Sales_data(istream & is) { read(is, *this); }  -->3
+  //其它与之前版本一致
+private:
+  string bookNo;
+  unsigned units_sold = 0;
+  double revenue = 0.0;
+};
+```
+1.`Sales_data first_item(cin)`使用了第三个构造函数，数据成员值根据输入确定。
+
+2.`Sales_data next`使用了第一个构造函数，数据成员值按顺序为：空字符串，0，0.0。
+
+3.`Sales_data last("9-999-9999-9");`使用了第一个构造函数，数据成员值按顺序为："9-999-9999-9"，0，0.0。
+
+#### 练习7.38
+
+```c++
+Sales_data(istream & is=cin) {
+    read(is, *this);    
+}
+```
+
+#### 练习7.39
+
+答：这种行为是不合法的。在定义`Sales_data item;`对象时，有两个函数可以匹配，此时发生错误称为二义性调用。
+
+#### 练习40
+
+```c++
+class Emplopee {
+public:
+  Emplopee()=default;
+  Emplopee(unsigned i, string n, string po, string ph, string ad) :sno(i), name(n), post(po), phone(ph), address(ad) {}
+  Emplopee(istream &is) {
+    cin >> sno >> name >> post >> phone >> address;
+  }
+private:
+  unsigned sno=0;
+  string name;
+  string post;
+  string phone;
+  string address;
+};
+```
+在雇员类中提供了三个构造函数。数据成员应该包括雇员编号（不能为空也不能重复，最好能自动生成），雇员的姓名、职位、联系方式、地址等。
+
+
+
+
+
