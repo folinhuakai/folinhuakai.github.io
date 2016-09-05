@@ -1140,11 +1140,14 @@ public:
   static const int vecSize = 20;//正确。
   static vector<double>  vec(vecSize);//编译错误:vecSize不是类型名。类内初始值必须使用=的初始化形式或者花括号括起来的直接初始化形式。
 };
+```
 
+```c++
 //main.cpp
 #include "example.h"
 double Example::rate;//正确写法为：constexpr double Example::rate;
 vector<double> Example::vec;//正确写法为：vector<double> Example::vec(Example::vecSize);
+```
 
 
 
