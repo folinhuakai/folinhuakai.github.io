@@ -925,7 +925,7 @@ public:
   Emplopee()=default;
   Emplopee(unsigned i, string n, string po, string ph, string ad) :sno(i), name(n), post(po), phone(ph), address(ad) {}
   Emplopee(istream &is) {
-    cin >> sno >> name >> post >> phone >> address;
+    is >> sno >> name >> post >> phone >> address;
   }
 private:
   unsigned sno=0;
@@ -936,6 +936,219 @@ private:
 };
 ```
 在雇员类中提供了三个构造函数。数据成员应该包括雇员编号（不能为空也不能重复，最好能自动生成），雇员的姓名、职位、联系方式、地址等。
+
+####练习7.41
+
+```c++
+  sales_data.h
+  Sales_data(const string &s, unsigned n, double p) :bookNo(s), units_sold(n), revenue(p*n) { cout << "three parm"<<endl; }
+  Sales_data() :Sales_data("", 0, 0) { cout << "default" << endl; };
+  Sales_data(string s) :Sales_data(s, 0, 0) { cout << "string parm" << endl; };
+  Sales_data(istream & is) :Sales_data() { cout << "istream parm" << endl; read(is, *this); }
+```
+```c++
+test.cpp
+  Sales_data s("111-111-111",2,9.9);//输出结果：three parm
+  Sales_data s1;//输出结果：three parm 、 default
+  Sales_data s2("999-999-999");//输出结果：three parm 、 tring parm
+  Sales_data s3(cin); //输出结果：three parm、default、istream parm
+```
+
+注意：
+
+1.一个委托构造函数使用它所在类的其它构造函数执行它自己的初始化过程。
+
+2.一个委托构造函数也有一个成员初始化列表和一个函数体。成员初始化列表只有唯一的入口，就是类名本身。和其他成员初始值一样，类名后面紧跟圆括号括起来的参数列表，参数列表必须与类中的另一个构造函数匹配。
+
+3.当一个构造函数委托给另一个构造函数时，受托构造函数的初始值列表和函数体被依次执行，然后控制权才会交给委托构造函数。以接受`istream &`的构造函数为例，它委托给了默认构造函数，默认构造函数又委托给了带三个参数的构造函数。按照规则应该先依次执行带三个参数的构造函数的初始化列表和函数体，然后依次执行默认构造函数的初始化列表和函数体，最后才把控制权交给委托函数接受`istream &`的构造函数，执行其函数体内的代码。
+
+#### 练习7.42
+
+```c++
+Emplopee(unsigned i, string n, string po, string ph, string ad) :sno(i), name(n), post(po), phone(ph), address(ad) {}
+Emplopee() :Emplopee(0,"","","","") {}
+Emplopee(istream &is) :Emplopee() {
+    is >> sno >> name >> post >> phone >> address;
+}
+```
+
+#### 练习7.43
+
+```c++
+class NoDefault {
+public:
+  NoDefault(int i) :number(i) {}
+private:
+  int number;
+};
+
+class C {
+public:
+  C():nodf(NoDefault(0)){}
+private:
+  NoDefault nodf;
+};
+```
+
+注意：
+
+1.因为`NoDefault`类没有默认构造函数，不能对`NoDefault`对象先定义再赋值。在定义C类的默认构造函数时，只能使用初始化列表而不能使用赋值，使用`NoDefault`类接受int的构造函数定义一个对象。
+
+2.使用默认构造函数初始化一个对象，正确方法是去掉对象名后面的空括号。
+
+3.建议：在实际中，如果定义了其它构造函数，那么最好也提供一个默认构造函数。
+
+#### 练习7.44
+
+答：不合法，NoDefault没有合适默认构造函数可使用。
+
+#### 练习7.45
+
+答：合法。因为类型C有默认构造函数，且它的默认构造函数对NoDefault使用带一个int参数的构造函数初始化。
+
+#### 练习7.46
+
+答：
+
+1.错误。有些类可以没有构造函数，编译器可以自动合成默认构造函数。
+
+2.错误。一个函数默认构造函数当且仅当调用时不需要传入任何参数，因此当一个构造函数的参数都有默认值时，这个函数就可以当默认构造函数使用。
+
+3.错误。从语义上来说，如果一个类型“没有有意义的默认值”，则不需要提供缺省构造函数。但是从语法上来说，有时候编译器需要调用缺省构造函数啊。如果你的类没有任何构造函数，那么编译器会给你“创建”一个缺省构造函数；但如果你的类有其他构造函数，编译器就不会这么做，需要自己写一个缺省构造函数。这时候，自己写缺省构造函数就是一种语法上的要求了，不管你的类型是否有“有意义的默认值”都得写一个缺省构造函数。比如说练习7.44创建一个NoDefault类型的vector，编译器要求NoDefault有默认构造函数。
+
+4.错误。首先，在类中部存在其它构造函数的情况下编译器会自动合成一个默认构造函数。
+
+#### 练习7.47
+
+答：应该是explicit的，这样就不能通过隐式转换将string参数传给构造函数，必须通过显示的初始化，可以保证构造函数的数据成员的安全性，同时也使对象定义更加明确。但丧失了构造函数的灵活性。
+```c++
+//几种类对象的定义方式
+Sales_data item = cin;//拷贝初始化
+Sales_data item(cin) ;//直接初始化
+Sales_data item=Sales_data(cin);//构造函数创建了一个临时的对象，并把这个对象赋值给item.
+```
+
+####7.48
+
+答：不管Sales_data的构造函数是不是explicit的，这两个对象的初始化方式都是显示的直接初始化过程因此不会出现错误。
+
+#### 练习7.49
+
+答：
+
+1.编译器用给定的string类型对象s创建了一个Sales_data对象，即用string类型的实参初始化了Sales_data类型型参。（此时发生了隐式转换的前提是接受string参数的构造函数不是explicit）。
+
+2.编译发生错误，无法将参数从std::string转换为Sales_data &。除了两种；例外情况，其他所有引用的类型都要和绑定的对象严格匹配，所以无法用string初始化Sales_data &,`Sales_data &item= str;`这种形式是不合法的。
+
+3.编译出错，表达式必须是可修改的左值。首先，`const Sales_data &item= str;`这种初始化形式是合法的，但combine被声明为const成员函数，this是指向常量的指针，不能通过this指针修改指对象的值。
+
+#### 练习 7.50
+
+```c++
+  Person() = default;
+  Person(const string &na, const string &ad) :name(na), address(ad) {};
+  explicit Person(istream &is);
+```
+
+#### 练习7.51
+
+答：个人觉得主要原因是便于理解。如有这样一个函数`vector<int>::size_type getSize(vector<int> &items);`,形如`getSize(10);`这样的函数调用意义不明。但如果是`string::size_type getSize(string &items);`,形如`getSize("hello world");`的函数调用很容易理解。
+
+#### 练习7.52
+
+答：编译出错：无法将initializer list转换为Sales_data。去掉将类内初始值即可。
+
+#### 练习7.53
+
+```c++
+class Debug {
+public:
+  constexpr Debug(bool b=true):hw(b),io(b),other(b){}
+  constexpr Debug(bool h,bool i,bool o) : hw(h), io(i), other(o) {}
+  constexpr bool any() { return hw || io || other; }
+  void setHw(bool b) { hw = b; }
+  void setIo(bool b) { io = b; }
+  void setOther(bool b) { other = b; }
+private:
+  bool hw;
+  bool io;
+  bool other;
+};
+```
+
+#### 练习7.54
+
+答：不能。constexpr成员函数是隐式的const。
+
+#### 练习7.55
+
+答：不是。Data是聚合类，但它的数据成员s不是字面值类型，因此它不是字面值常量类。`std::cout << std::is_literal_type<Data>::value << std::endl;`测试结果是false。
+
+#### 练习7.56
+
+答：类有时候需要一些成员与类本身直接相关，而不是与类的对象保持关联，通过在成员的声明前加上关键字static即使其与类关联在一起。
+
+与普通成员的区别：1.静态数据成员类型可以是它所属的类类型，而非静态数据成员则受到限制，只能声明成它所属类的指针或引用。2.可以使用静态成员作为默认实参。
+
+优点： 有些数据应该属于类，就没必要在每个对象中存储。一旦这些数据发生改变，需要对代码改动较少。
+
+
+#### 练习7.57
+
+```c++
+class Account {
+public:
+  Account() = default;
+  Account(string &s):owner(s){}
+  Account(string &s,double m):owner(s),amount(m){}
+  static double getRate() { return rate;}
+  static void setRate(double);
+private:
+  string owner;
+  double amount=0.0;
+  static double rate;
+  static double initRate();
+};
+double Account::initRate(){
+  rate = 3.32;
+  return  rate;
+}
+double Account::rate = initRate();
+void Account::setRate(double r) {
+  rate = r;
+}
+```
+注意：
+
+1.静态数据成员rate被所以Account对象共享，存在于任何对象之外。
+
+2.静态成员函数不与任何对象绑定，不包含this指针。作为结果，静态成员函数不能声明成const,而且也不能再静态函数体内使用this指针。
+
+3.使用作用域运算符直接访问静态成员Account::getRate()，也可以使用类的对象、指针或引用来访问静态成员。
+
+4.静态数据成员不属于类的任何一个对象，所以它们不是在创建类的对象时被定义的，这意味着它们不是由类的构造函数初始化的。一般来说不能在类的内部初始化静态数据成员，而应该在类的外部定义和初始化每一个静态数据成员。
+
+5.特殊情况下也可以类内初始化静态数据成员，但要求静态数据成员必须是字面值常量类型的constexpr，初始值必须是常量表达式。
+
+#### 练习7.58
+
+```c++
+//example.h
+class Example {
+public:
+  static  double rate = 6.5;//编译错误：带有初始值的设定项必须为常量。static constexpr double rate = 6.5;
+  static const int vecSize = 20;//正确。
+  static vector<double>  vec(vecSize);//编译错误:vecSize不是类型名。类内初始值必须使用=的初始化形式或者花括号括起来的直接初始化形式。
+};
+
+//main.cpp
+#include "example.h"
+double Example::rate;//正确写法为：constexpr double Example::rate;
+vector<double> Example::vec;//正确写法为：vector<double> Example::vec(Example::vecSize);
+
+
+
+
 
 
 
